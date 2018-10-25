@@ -25,7 +25,7 @@ module.exports = function Cycles(mod) {
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000);});
 
-	mod.hook('C_LOAD_TOPO_FIN', 1, () => {
+	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {
 		if (config.Enable && !bleb) startTimer();
 		if (lastAero > 0) {
 			cleanTimeout();
