@@ -33,7 +33,7 @@ module.exports = function Cycles(mod) {
 		}
 	});
 	
-	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {clearTimer(); cleanTimeout(); lastAero = 0; count = 0;});
+	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {cleanTimer(); cleanTimeout(); lastAero = 0; count = 0;});
 	
 	function aeroChange(aeroSet, blendTime){
 		isChanged[aeroSet] = enabled;
@@ -55,7 +55,7 @@ module.exports = function Cycles(mod) {
 	}
 	
 	function startTimer() {
-		clearTimer();
+		cleanTimer();
 		bleb = setInterval(timer, config.cycleTime);
 	}
 	
@@ -66,8 +66,8 @@ module.exports = function Cycles(mod) {
 		}
 	}
 	
-	function clearTimer() {
-		if (bleb || count > 0) {
+	function cleanTimer() {
+		if (bleb) {
 			clearInterval(bleb);
 			bleb = null;
 		}
@@ -89,7 +89,7 @@ module.exports = function Cycles(mod) {
 				arg = Number(arg);
 				if (isInstance) {
 					msg(`Aero for instance not enable`);
-				} else if (bleb || count > 0) {
+				} else if (bleb) {
 					msg(`Please ${'disable'.clr('FF0000')} time cycle before set aero.`);
 				} else if (arg < aero.length) {
 					msg(`Time cycles set: ${arg}`);
@@ -103,7 +103,10 @@ module.exports = function Cycles(mod) {
 						break;
 					case 'off':
 						msg(`Time cycles: ${'disable'.clr('FF0000')}.`);
-						clearTimer();
+						cleanTimer();
+						break;
+					default:
+						msg(`Wrong command :v`);
 						break;
 				}
 			}
