@@ -4,7 +4,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 ## Commands
 - cycle on: start cycle timer</br>
 - cycle off: stop cycle timer</br>
-- cycle [0-5]: set cycle by your self *need stop cycle timer</br>
+- cycle [0-5]: set aero by your self *need stop cycle timer</br>
  
 ## Config
 - "onMapChange": true/false -> enable and disable module</br>
