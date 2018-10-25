@@ -78,7 +78,7 @@ module.exports = function Cycles(mod) {
 			if (!isNaN(arg)) {
 				arg = Number(arg);
 				if (bleb || count > 0) {
-					msg(`Please ${'deactivating'.clr('FF0000')} before set cycle.`);
+					msg(`Please ${'disable'.clr('FF0000')} cycle before set aero.`);
 				} else if (arg < aero.length) {
 					msg(`Time cycles set: ${arg}`);
 					aeroSwitch(arg, 0);
@@ -86,11 +86,11 @@ module.exports = function Cycles(mod) {
 			} else {
 				switch(arg.toLowerCase()) {
 					case 'on':
-						msg(`Time cycles: ${'activated'.clr('00FF33')}.`);
+						msg(`Time cycles: ${'enable'.clr('00FF33')}.`);
 						startTimer();
 						break;
 					case 'off':
-						msg(`Time cycles: ${'deactivating'.clr('FF0000')}.`);
+						msg(`Time cycles: ${'disable'.clr('FF0000')}.`);
 						clearTimer();
 						break;
 				}
