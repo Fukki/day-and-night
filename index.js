@@ -9,23 +9,23 @@ const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island
 ];
 
 module.exports = function Cycles(mod) {
-	let count = 0, bleb = null, isInstance = false, isChanged = [];
+	let config = {}, btime = 0, count = 0, bleb = null, isInstance = false, isChanged = [];
 	try {
-		var config = require('./config.json');
+		config = require('./config.json');
 	} catch (e) {
-		var config = {
-			onMapChange: true,
-			onInstance: false,
+		config = {
+			Enable: true,
+			Instance: false,
 			cycleTime: 120000,
-			blendTime: 120,
 			version: "1a"
 		};
 		saveConfig();
 	}
+	btime = Math.floor(config.cycleTime/1000);
 	
-	mod.hook('S_LOAD_TOPO', 3, (event) => {if (!config.onInstance) isInstance = (event.zone >= 9000);});
+	mod.hook('S_LOAD_TOPO', 3, (event) => {if (!config.Instance) isInstance = (event.zone >= 9000);});
 
-	mod.hook('C_LOAD_TOPO_FIN', 1, (event) => {if (config.onMapChange) startTimer();});
+	mod.hook('C_LOAD_TOPO_FIN', 1, (event) => {if (config.Enable) startTimer();});
 
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {clearTimer();});
 	
@@ -38,7 +38,7 @@ module.exports = function Cycles(mod) {
 		});
 	}
 
-	function aeroSwitch(aeroSet, blendTime = config.blendTime) {
+	function aeroSwitch(aeroSet, blendTime = btime) {
 		for(i = 0; i < aero.length; i++) {
 			if (i === aeroSet) aeroChange(i, blendTime, true);
 			else if (isChanged[i]) aeroChange(i, blendTime, false);
@@ -73,6 +73,7 @@ module.exports = function Cycles(mod) {
 		}
 	}
 
+	if (config.Enable)
 	mod.command.add('cycle', (arg) => {
 		if(arg){
 			if (!isNaN(arg)) {
@@ -106,7 +107,7 @@ module.exports = function Cycles(mod) {
 				console.log('[Cycles] - Config file generated.');
 		});
 	}
-
+	
 	this.destructor = () => {
 		mod.command.remove('cycle');
 	};
