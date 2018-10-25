@@ -8,5 +8,5 @@ Or edit `onMapChange` to `true` in `config.json`.
 To turn it off type `cycle off` into proxy chat.  
 After that teleport to some location done.  
 
-Origina by [codeagon](https://github.com/codeagon)
-Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/)
+Origina by [codeagon](https://github.com/codeagon).
+Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/).
