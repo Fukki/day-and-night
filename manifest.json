@@ -1,9 +1,9 @@
 {
 	"files": {
-		"index.js": "e7c60b7f507eea1169914d63b58366e5bef5e6805bac8b0a71985ae9ad136c98"
+		"index.js": "3eb8040de7e6d0f4d64d0975c0fc1148ca4a504928cf2a99bc29cc51810281f5"
 	},
 	"defs": {
-		"C_LOAD_TOPO_FIN": 1,
+		"C_LOAD_TOPO_FIN": "raw",
 		"S_AERO": 1,
 		"S_LOAD_TOPO": 3,
 		"S_RETURN_TO_LOBBY": "raw"
