@@ -13,5 +13,8 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - "blendTime": 120 -> blend time for aero *sec</br>
 - "version": "1a" -> just kappa :v</br>
 
+## My Edit
+- full cycle with new logic :v
+
 Origina by [codeagon](https://github.com/codeagon)</br>
 Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/)</br>
