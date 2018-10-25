@@ -1,5 +1,5 @@
 # Day and Night
-Adds an incredibly poorly done day night cycle to Tera because I was bored.
+Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 
 ## Commands
 - cycle on: start cycle timer</br>
@@ -7,11 +7,11 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.
 - cycle [0-5]: set cycle by your self *need stop cycle timer</br>
  
 ## Config
-- "onMapChange": true/false -> enable and disable module
-- "onInstance": true/false -> enable and disable aero in dungeon
-- "cycleTime": 120000 -> timer for next aero *ms
-- "blendTime": 120 -> blend time for aero *sec
-- "version": "1a" -> just kappa :v
+- "onMapChange": true/false -> enable and disable module</br>
+- "onInstance": true/false -> enable and disable aero in dungeon</br>
+- "cycleTime": 120000 -> timer for next aero *ms</br>
+- "blendTime": 120 -> blend time for aero *sec</br>
+- "version": "1a" -> just kappa :v</br>
 
 Origina by [codeagon](https://github.com/codeagon)</br>
 Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/)</br>
