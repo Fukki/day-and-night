@@ -1,0 +1,8 @@
+{
+	"disableAutoUpdate": false,
+	"options": {
+		"niceName": "Day and Night"
+	},
+    "servers": ["https://raw.githubusercontent.com/Fukki/day-and-night/master/"],
+    "supportUrl": "https://github.com/Fukki/day-and-night/issues"
+}

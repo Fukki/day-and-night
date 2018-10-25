@@ -1,0 +1,11 @@
+{
+	"files": {
+		"index.js": "5d4c1b6b7fbd81333e448d42dff242cc6fbd6180b88c8f4bac51d95c098eb240"
+	},
+	"defs": {
+		"C_LOAD_TOPO_FIN": 1,
+		"S_AERO": 1,
+		"S_LOAD_TOPO": 3,
+		"S_RETURN_TO_LOBBY": "raw"
+	}
+}
