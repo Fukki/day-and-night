@@ -16,5 +16,5 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 ## My Edit
 - Full cycle with new logic :v
 
-Origina by [codeagon](https://github.com/codeagon)</br>
+Original by [codeagon](https://github.com/codeagon)</br>
 Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/)</br>
