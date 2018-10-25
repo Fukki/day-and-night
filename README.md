@@ -13,7 +13,8 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - "version": "1a" -> just kappa :v</br>
 
 ## My Edit
-- Just kappa :v
+- Just kappa :v</br>
+- Full cycle day and night @_@</br>
 
 Original by [codeagon](https://github.com/codeagon)</br>
 Backup by [Tera-Shiraneko](https://github.com/Tera-Shiraneko/)</br>
