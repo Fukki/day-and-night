@@ -29,7 +29,7 @@ module.exports = function Cycles(mod) {
 
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {clearTimer();});
 	
-	function aeroChanged(aeroSet, blendTime){
+	function aeroChange(aeroSet, blendTime){
 		isChanged[aeroSet] = enabled;
 		mod.send('S_AERO', 1, {
 			enabled: (enabled ? 1 : 0),
@@ -40,8 +40,8 @@ module.exports = function Cycles(mod) {
 
 	function aeroSwitch(aeroSet, blendTime = config.blendTime) {
 		for(i = 0; i < aero.length; i++) {
-			if (i === aeroSet) aeroChanged(i, blendTime, true);
-			else if (isChanged[i]) aeroChanged(i, blendTime, false);
+			if (i === aeroSet) aeroChange(i, blendTime, true);
+			else if (isChanged[i]) aeroChange(i, blendTime, false);
 		}
 	}
 	
