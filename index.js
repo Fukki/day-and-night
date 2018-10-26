@@ -9,7 +9,7 @@ const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island
 ];
 
 module.exports = function Cycles(mod) {
-	let config = {}, btime = 0, count = 0, bleb = null, otime = null, isInstance = false, isChanged = [], lastAero = 0;
+	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, bleb = null, otime = null, isInstance = false, isLobby = false;
 	try {
 		config = require('./config.json');
 	} catch (e) {
@@ -17,22 +17,20 @@ module.exports = function Cycles(mod) {
 			Enable: true,
 			Instance: false,
 			cycleTime: 120000,
-			version: "1a"
+			loadTimeout: 1000,
+			version: "Kappa :v"
 		};
 		saveConfig();
 	}
 	btime = Math.floor(config.cycleTime/1000);
 	
-	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000);});
+	mod.hook('S_LOAD_TOPO', 3, (e) => {enable(); if (!config.Instance) isInstance = (e.zone >= 9000);});
 
-	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {
-		if (config.Enable && !bleb) startTimer();
-		if (lastAero > 0 && !isInstance) {
-			cleanTimeout(); otime = setTimeout(function () {aeroSwitch(lastAero - 1, 5);}, 1000);
-		}
-	});
+	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
 	
-	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {cleanTimer(); cleanTimeout(); lastAero = 0; count = 0;});
+	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
+	
+	mod.hook("S_SPAWN_ME", 'raw', () => {enable(); isLobby = false;});
 	
 	function aeroChange(aeroSet, blendTime){
 		isChanged[aeroSet] = enabled;
@@ -45,7 +43,7 @@ module.exports = function Cycles(mod) {
 
 	function aeroSwitch(aeroSet, blendTime = btime) {
 		lastAero = aeroSet + 1;
-		if (!isInstance) {
+		if (!isInstance && !isLobby) {
 			for(i = 0; i < aero.length; i++) {
 				if (i === aeroSet) aeroChange(i, blendTime, true);
 				else if (isChanged[i]) aeroChange(i, blendTime, false);
@@ -86,13 +84,16 @@ module.exports = function Cycles(mod) {
 		if(arg){
 			if (!isNaN(arg)) {
 				arg = Number(arg);
-				if (isInstance) {
+				if (bleb) {
+					msg(`Please ${'disable'.clr('FF0000')} cycle before set.`);
+				} else if (isInstance) {
 					msg(`Aero for instance not enable`);
-				} else if (bleb) {
-					msg(`Please ${'disable'.clr('FF0000')} time cycle before set aero.`);
 				} else if (arg < aero.length) {
 					msg(`Time cycles set: ${arg}`);
-					aeroSwitch(arg, 0);
+					count = arg;
+					aeroSwitch(arg, 5);
+				} else {
+					msg(`Please use 0 ~ ${(aero.length - 1)} for set.`);
 				}
 			} else {
 				switch(arg.toLowerCase()) {
@@ -112,7 +113,9 @@ module.exports = function Cycles(mod) {
 		}
 	});
 	
-	function msg(msg){mod.command.message(msg);}
+	function enable() {if (config.Enable && !bleb) startTimer();}
+	
+	function msg(msg) {mod.command.message(msg);}
 
 	function saveConfig() {
 		fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(
