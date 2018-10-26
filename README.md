@@ -11,7 +11,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - "Instance": true/false -> enable and disable aero in dungeon</br>
 - "cycleTime": 120000 -> timer for next aero *ms</br>
 - "loadTimeout": 1000 -> change aero when change the map or channel *ms</br>
-- "version": "Kappa :v" -> just kappa :v</br>
+- "version": "1a" -> just kappa :v</br>
 
 ## My Edit
 - Just kappa :v</br>
