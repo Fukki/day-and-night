@@ -34,7 +34,7 @@ module.exports = function Cycles(mod) {
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000);});
 
-	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
+	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {isChanged = []; aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
 	
