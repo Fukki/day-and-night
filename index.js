@@ -23,10 +23,10 @@ module.exports = function Cycles(mod) {
 		saveConfig();
 	}
 	if (config.version !== "1b") {
-        Object.assign(config, {
-            loadTimeout: 1000,
-            version: "1b"
-        });
+		Object.assign(config, {
+			loadTimeout: 1000,
+			version: "1b"
+		});
 		saveConfig();
 	}
 	
