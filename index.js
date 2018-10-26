@@ -32,15 +32,15 @@ module.exports = function Cycles(mod) {
 	
 	btime = Math.floor(config.cycleTime/1000);
 	
-	mod.hook('S_LOAD_TOPO', 3, (e) => {enable(); if (!config.Instance) isInstance = (e.zone >= 9000);});
+	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000);});
 
-	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
+	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {enable(); isLobby = false;});
 	
-	function aeroChange(aeroSet, blendTime){
+	function aeroChange(aeroSet, blendTime, enabled){
 		isChanged[aeroSet] = enabled;
 		mod.send('S_AERO', 1, {
 			enabled: (enabled ? 1 : 0),
