@@ -22,6 +22,7 @@ module.exports = function Cycles(mod) {
 		};
 		saveConfig();
 	}
+	if (!config.loadTimeout) config.loadTimeout = 1000;
 	btime = Math.floor(config.cycleTime/1000);
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {enable(); if (!config.Instance) isInstance = (e.zone >= 9000);});

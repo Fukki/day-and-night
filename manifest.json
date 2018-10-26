@@ -1,11 +1,11 @@
 {
 	"files": {
-		"index.js": "8f1cfadde72a5f17170967f035320c684a1b18e4b3c43ed76899ed2d0022aef3"
+		"index.js": "c76ca59c37b3bd14527ef80936cc80d445b03d8c8d3c9b321f19661cd4da25fc"
 	},
 	"defs": {
+		"C_LOAD_TOPO_FIN": "raw",
 		"S_AERO": 1,
 		"S_LOAD_TOPO": 3,
-		"C_LOAD_TOPO_FIN": "raw",
 		"S_RETURN_TO_LOBBY": "raw",
 		"S_SPAWN_ME": "raw"
 	}
