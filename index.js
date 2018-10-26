@@ -18,11 +18,18 @@ module.exports = function Cycles(mod) {
 			Instance: false,
 			cycleTime: 120000,
 			loadTimeout: 1000,
-			version: "Kappa :v"
+			version: "1b"
 		};
 		saveConfig();
 	}
-	if (!config.loadTimeout) config.loadTimeout = 1000;
+	if (config.version !== "1b") {
+        Object.assign(config, {
+            loadTimeout: 1000,
+            version: "1b"
+        });
+		saveConfig();
+	}
+	
 	btime = Math.floor(config.cycleTime/1000);
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {enable(); if (!config.Instance) isInstance = (e.zone >= 9000);});
