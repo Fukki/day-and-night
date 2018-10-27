@@ -53,7 +53,6 @@ module.exports = function Cycles(mod) {
 				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);
 			}, config.loadTimeout);
 		}
-		enable();
 	});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
