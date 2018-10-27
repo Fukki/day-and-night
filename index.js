@@ -20,7 +20,7 @@ module.exports = function Cycles(mod) {
 			CivilUnrest: false,
 			cycleTime: 120000,
 			loadTimeout: 1000,
-			version: "1b"
+			version: "1c"
 		};
 		saveConfig();
 	}
