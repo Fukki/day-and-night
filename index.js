@@ -48,8 +48,10 @@ module.exports = function Cycles(mod) {
 		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
 		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
 		if (lastAero > 0) {
-			cleanTimeout(); otime = setTimeout(function () {
-				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);}, config.loadTimeout);
+			cleanTimeout();
+			otime = setTimeout(function () {
+				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);
+			}, config.loadTimeout);
 		}
 		enable();
 	});
