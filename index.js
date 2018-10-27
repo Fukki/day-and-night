@@ -52,12 +52,14 @@ module.exports = function Cycles(mod) {
 	mod.hook("S_SPAWN_ME", 'raw', () => {enable(); isLobby = false;});
 	
 	function aeroChange(aeroSet, blendTime, enabled){
-		isChanged[aeroSet] = enabled;
-		mod.send('S_AERO', 1, {
-			enabled: (enabled ? 1 : 0),
-			blendTime: blendTime,
-			aeroSet: aero[aeroSet]
-		});
+		if (!isLobby && !isInstance && !isBattleground && !isCivilUnrest) {
+			isChanged[aeroSet] = enabled;
+			mod.send('S_AERO', 1, {
+				enabled: (enabled ? 1 : 0),
+				blendTime: blendTime,
+				aeroSet: aero[aeroSet]
+			});
+		}
 	}
 
 	function aeroSwitch(aeroSet, blendTime = btime) {
@@ -70,33 +72,13 @@ module.exports = function Cycles(mod) {
 		}
 	}
 	
-	function startTimer() {
-		cleanTimer();
-		bleb = setInterval(timer, config.cycleTime);
-	}
+	function startTimer() {cleanTimer(); bleb = setInterval(timer, config.cycleTime);}
 	
-	function cleanTimeout() {
-		if (otime) {
-			clearTimeout(otime);
-			otime = null;
-		}
-	}
+	function cleanTimeout() {if (otime) {clearTimeout(otime); otime = null;}}
 	
-	function cleanTimer() {
-		if (bleb) {
-			clearInterval(bleb);
-			bleb = null;
-		}
-	}
+	function cleanTimer() {if (bleb) {clearInterval(bleb);bleb = null;}}
 
-	function timer() {
-		if (count < aero.length) {
-			aeroSwitch(count);
-			count++;
-		} else {
-			count = 0;
-		}
-	}
+	function timer() {if (count < aero.length) {aeroSwitch(count); count++;} else {count = 0;}}
 
 	if (config.Enable)
 	mod.command.add('cycle', (arg1, arg2) => {
