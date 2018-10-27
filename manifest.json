@@ -1,10 +1,11 @@
 {
 	"files": {
-		"index.js": "694afbd29f5f4d098f60d8c8ac309415b646ce2dcf38a0defa561d4e2f2e493a"
+		"index.js": "81447b35615170c1de634079dc8f472db1b23d913aa80dc4aea6e1750df105da"
 	},
 	"defs": {
 		"C_LOAD_TOPO_FIN": "raw",
 		"S_AERO": 1,
+		"S_BATTLE_FIELD_ENTRANCE_INFO": 1,
 		"S_LOAD_TOPO": 3,
 		"S_RETURN_TO_LOBBY": "raw",
 		"S_SPAWN_ME": "raw"

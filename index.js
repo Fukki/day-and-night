@@ -9,30 +9,39 @@ const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island
 ];
 
 module.exports = function Cycles(mod) {
-	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, bleb = null, otime = null, isInstance = false, isLobby = false;
+	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isInstance = false, isLobby = false, isBattleground = false, isCivilUnrest = false;
 	try {
 		config = require('./config.json');
 	} catch (e) {
 		config = {
 			Enable: true,
 			Instance: false,
+			Battleground: false,
+			CivilUnrest: false,
 			cycleTime: 120000,
 			loadTimeout: 1000,
 			version: "1b"
 		};
 		saveConfig();
 	}
-	if (config.version !== "1b") {
-		Object.assign(config, {
-			loadTimeout: 1000,
-			version: "1b"
-		});
+	if (config.version !== "1c") {
+		config = {
+			Enable: config.Enable ? config.Enable : false,
+			Instance: config.Instance ? config.Instance : false,
+			Battleground: config.Battleground ? config.Battleground : false,
+			CivilUnrest: config.CivilUnrest ? config.CivilUnrest : false,
+			cycleTime: config.cycleTime ? config.cycleTime : 120000,
+			loadTimeout: config.loadTimeout ? config.loadTimeout : 1000,
+			version: "1c"
+		};
 		saveConfig();
 	}
 	
 	btime = Math.floor(config.cycleTime/1000);
 	
-	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000);});
+	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
+	
+	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000); if (!config.Battleground) isBattleground = (e.zone === zoneBattleground); if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152)});
 
 	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {isChanged = []; aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
 	
@@ -51,7 +60,7 @@ module.exports = function Cycles(mod) {
 
 	function aeroSwitch(aeroSet, blendTime = btime) {
 		lastAero = aeroSet + 1;
-		if (!isInstance && !isLobby) {
+		if (!isLobby && !isInstance && !isBattleground && !isCivilUnrest) {
 			for(i = 0; i < aero.length; i++) {
 				if (i === aeroSet) aeroChange(i, blendTime, true);
 				else if (isChanged[i]) aeroChange(i, blendTime, false);
@@ -95,7 +104,9 @@ module.exports = function Cycles(mod) {
 				if (bleb) {
 					msg(`Please ${'disable'.clr('FF0000')} cycle before set.`);
 				} else if (isInstance) {
-					msg(`Aero for instance not enable`);
+					msg(`Aero for Instance has not enable`);
+				} else if (isBattleground) {
+					msg(`Aero for Battleground has not enable`);
 				} else if (arg < aero.length) {
 					msg(`Time cycles set: ${arg}`);
 					count = arg;
@@ -112,6 +123,43 @@ module.exports = function Cycles(mod) {
 					case 'off':
 						msg(`Time cycles: ${'disable'.clr('FF0000')}.`);
 						cleanTimer();
+						break;
+					case 'time':
+						if (!isNaN(arg)) {
+							msg(`Must be the number.`);
+							break;
+						}
+						config.cycleTime = Number(arg);
+						msg(`Time cycles for timer set to: ${config.cycleTime} ms.`);
+						break;
+						saveConfig();
+					case 'loadtime':
+						if (!isNaN(arg)) {
+							msg(`Must be the number.`);
+							break;
+						}
+						config.loadTimeout = Number(arg);
+						msg(`Time cycles for Load time set to: ${config.loadTimeout} ms.`);
+						break;
+						saveConfig();
+					case 'instance':
+					case 'dungeon':
+					case 'dg':
+						config.Instance = !config.Instance;
+						msg(`Time cycles for Instance: ${config.Instance ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
+						break;
+					case 'battleground':
+					case 'bg':
+						config.Battleground = !config.Battleground;
+						msg(`Time cycles for Battleground: ${config.Battleground ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
+						break;
+					case 'civilunrest':
+					case 'cu':
+						config.CivilUnrest = !config.CivilUnrest;
+						msg(`Time cycles for Civil Unrest: ${config.CivilUnrest ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
 						break;
 					default:
 						msg(`Wrong command :v`);
