@@ -18,21 +18,23 @@ module.exports = function Cycles(mod) {
 			Instance: false,
 			Battleground: false,
 			CivilUnrest: false,
+			cycleLock: 0,
 			cycleTime: 120000,
 			loadTimeout: 1000,
-			version: "1c"
+			version: "1d"
 		};
 		saveConfig();
 	}
-	if (config.version !== "1c") {
+	if (config.version !== "1d") {
 		config = {
 			Enable: config.Enable ? config.Enable : false,
 			Instance: config.Instance ? config.Instance : false,
 			Battleground: config.Battleground ? config.Battleground : false,
 			CivilUnrest: config.CivilUnrest ? config.CivilUnrest : false,
+			cycleLock: config.cycleLock ? config.cycleLock : 0,
 			cycleTime: config.cycleTime ? config.cycleTime : 120000,
 			loadTimeout: config.loadTimeout ? config.loadTimeout : 1000,
-			version: "1c"
+			version: "1d"
 		};
 		saveConfig();
 	}
@@ -43,7 +45,7 @@ module.exports = function Cycles(mod) {
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000); if (!config.Battleground) isBattleground = (e.zone === zoneBattleground); if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152)});
 
-	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {isChanged = []; aeroSwitch(lastAero - 1, 5);}, config.loadTimeout);}});
+	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);}, config.loadTimeout);}});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
 	
@@ -97,100 +99,112 @@ module.exports = function Cycles(mod) {
 	}
 
 	if (config.Enable)
-	mod.command.add('cycle', (arg) => {
-		if(arg){
-			if (!isNaN(arg)) {
-				arg = Number(arg);
-				if (bleb) {
-					msg(`Please ${'disable'.clr('FF0000')} cycle before set.`);
-				} else if (isInstance) {
-					msg(`Aero for Instance has not enable`);
-				} else if (isBattleground) {
-					msg(`Aero for Battleground has not enable`);
-				} else if (isCivilUnrest) {
-					msg(`Aero for Civil Unrest has not enable`);
-				} else if (arg < aero.length) {
-					msg(`Time cycles set: ${arg}`);
-					count = arg;
-					aeroSwitch(arg, 5);
-				} else {
-					msg(`Please use 0 ~ ${(aero.length - 1)} for set.`);
-				}
-			} else {
-				switch(arg.toLowerCase()) {
-					case 'on':
-						msg(`Time cycles: ${'enable'.clr('00FF33')}.`);
-						startTimer();
-						break;
-					case 'off':
-						msg(`Time cycles: ${'disable'.clr('FF0000')}.`);
-						cleanTimer();
-						break;
-					case 'time':
-						if (!isNaN(arg)) {
-							config.cycleTime = Number(arg);
-							msg(`Time cycles for timer set to: ${config.cycleTime} ms.`);
-							saveConfig();
-						} else {
-							msg(`Must be the number.`);
-						}
-						break;
-					case 'loadtime':
-						if (!isNaN(arg)) {
-							config.loadTimeout = Number(arg);
-							msg(`Time cycles for load time set to: ${config.loadTimeout} ms.`);
-							saveConfig();
-						} else {
-							msg(`Must be the number.`);
-						}
-						break;
-					case 'instance':
-					case 'dungeon':
-					case 'dg':
-						if (isInstance) {
-							msg(`Cannot set this while in Instance.`);
-						} else {
-							config.Instance = !config.Instance;
-							msg(`Time cycles for Instance: ${config.Instance ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-							saveConfig();
-						}
-						break;
-					case 'battleground':
-					case 'bg':
-						if (isBattleground) {
-							msg(`Cannot set this while in Battleground.`);
-						} else {
-							config.Battleground = !config.Battleground;
-							msg(`Time cycles for Battleground: ${config.Battleground ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-							saveConfig();
-						}
-						break;
-					case 'civilunrest':
-					case 'cu':
-						if (isCivilUnrest) {
-							msg(`Cannot set this while in Civil Unrest.`);
-						} else {
-							config.CivilUnrest = !config.CivilUnrest;
-							msg(`Time cycles for Civil Unrest: ${config.CivilUnrest ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-							saveConfig();
-						}
-						break;
-					default:
-						msg(`Wrong command :v`);
-						break;
-				}
+	mod.command.add('cycle', (arg1, arg2) => {
+		if(arg1){
+			switch(arg1.toLowerCase()) {
+				case 'on':
+					msg(`Time cycles: ${'enable'.clr('00FF33')}.`);
+					startTimer();
+					break;
+				case 'off':
+					msg(`Time cycles: ${'disable'.clr('FF0000')}.`);
+					cleanTimer();
+					break;
+				case 'set':
+					arg2 = Number(arg2);
+					if (bleb) {
+						msg(`Please ${'disable'.clr('FF0000')} cycle before set.`);
+					} else if (isInstance) {
+						msg(`Aero for Instance has not enable`);
+					} else if (isBattleground) {
+						msg(`Aero for Battleground has not enable`);
+					} else if (isCivilUnrest) {
+						msg(`Aero for Civil Unrest has not enable`);
+					} else if (arg2 < aero.length) {
+						msg(`Time cycles set: ${arg2}`);
+						count = arg2; aeroSwitch(arg2, 5);
+					} else {
+						msg(`Please use 0 ~ ${(aero.length - 1)} for set.`);
+					}
+					break;
+				case 'lock':
+					arg2 = Number(arg2);
+					if (arg2 < aero.length) {
+						msg(`Time cycles lock to: ${arg2}`);
+						config.cycleLock = arg2 + 1;
+						count = arg2; aeroSwitch(arg2, 5);
+						saveConfig();
+					} else {
+						msg(`Please use 0 ~ ${(aero.length - 1)} for lock.`);
+					}
+					break;
+				case 'unlock':
+					msg(`Time cycles has unlock.`);
+					config.cycleLock = 0;
+					saveConfig();
+					break;
+				case 'time':
+				case 'timer':
+					if (!isNaN(arg2)) {
+						config.cycleTime = Number(arg2);
+						msg(`Time cycles for timer set to: ${config.cycleTime} ms.`);
+						saveConfig();
+					} else {
+						msg(`Must be the number.`);
+					}
+					break;
+				case 'timeout':
+				case 'loadtime':
+				case 'loadtimeout':
+					if (!isNaN(arg2)) {
+						config.loadTimeout = Number(arg2);
+						msg(`Time cycles for load time set to: ${config.loadTimeout} ms.`);
+						saveConfig();
+					} else {
+						msg(`Must be the number.`);
+					}
+					break;
+				case 'instance':
+				case 'dungeon':
+				case 'dg':
+					if (isInstance) {
+						msg(`Cannot set this while in Instance.`);
+					} else {
+						config.Instance = !config.Instance;
+						msg(`Time cycles for Instance: ${config.Instance ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
+					}
+					break;
+				case 'battleground':
+				case 'bg':
+					if (isBattleground) {
+						msg(`Cannot set this while in Battleground.`);
+					} else {
+						config.Battleground = !config.Battleground;
+						msg(`Time cycles for Battleground: ${config.Battleground ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
+					}
+					break;
+				case 'civilunrest':
+				case 'cu':
+					if (isCivilUnrest) {
+						msg(`Cannot set this while in Civil Unrest.`);
+					} else {
+						config.CivilUnrest = !config.CivilUnrest;
+						msg(`Time cycles for Civil Unrest: ${config.CivilUnrest ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+						saveConfig();
+					}
+					break;
+				default:
+					msg(`Wrong command :v`);
+					break;
 			}
 		}
 	});
 	
-	function enable() {if (config.Enable && !bleb) startTimer();}
-	
 	function msg(msg) {mod.command.message(msg);}
+	
+	function enable() {if (config.Enable && !bleb && config.cycleLock === 0) startTimer();}
 
-	function saveConfig() {
-		fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(
-			config, null, 4), err => {
-				console.log('[Cycles] - Config file generated.');
-		});
-	}
+	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
