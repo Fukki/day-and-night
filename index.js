@@ -43,23 +43,28 @@ module.exports = function Cycles(mod) {
 	
 	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
 	
-	mod.hook('S_LOAD_TOPO', 3, (e) => {if (!config.Instance) isInstance = (e.zone >= 9000); if (!config.Battleground) isBattleground = (e.zone === zoneBattleground); if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152)});
-
-	mod.hook('C_LOAD_TOPO_FIN', 'raw', () => {enable(); if (lastAero > 0 && !isInstance) {cleanTimeout(); otime = setTimeout(function () {isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);}, config.loadTimeout);}});
+	mod.hook('S_LOAD_TOPO', 3, (e) => {
+		if (!config.Instance) isInstance = (e.zone >= 9000);
+		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
+		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
+		if (lastAero > 0) {
+			cleanTimeout(); otime = setTimeout(function () {
+				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);}, config.loadTimeout);
+		}
+		enable();
+	});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {enable(); isLobby = true;});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {enable(); isLobby = false;});
 	
 	function aeroChange(aeroSet, blendTime, enabled){
-		if (!isLobby && !isInstance && !isBattleground && !isCivilUnrest) {
-			isChanged[aeroSet] = enabled;
-			mod.send('S_AERO', 1, {
-				enabled: (enabled ? 1 : 0),
-				blendTime: blendTime,
-				aeroSet: aero[aeroSet]
-			});
-		}
+		isChanged[aeroSet] = enabled;
+		mod.send('S_AERO', 1, {
+			enabled: (enabled ? 1 : 0),
+			blendTime: blendTime,
+			aeroSet: aero[aeroSet]
+		});
 	}
 
 	function aeroSwitch(aeroSet, blendTime = btime) {

@@ -1,9 +1,8 @@
 {
 	"files": {
-		"index.js": "da35c08b0663c29c85c9eebb6b99559acbfac24b8f741c96446bc07d719d0e57"
+		"index.js": "366f37ce1ced21bd55b58fb16eb3588f848d435a4fd03e3f89ec1faeabdbfb2e"
 	},
 	"defs": {
-		"C_LOAD_TOPO_FIN": "raw",
 		"S_AERO": 1,
 		"S_BATTLE_FIELD_ENTRANCE_INFO": 1,
 		"S_LOAD_TOPO": 3,
