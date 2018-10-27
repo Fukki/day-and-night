@@ -5,7 +5,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - cycle on: start cycle timer</br>
 - cycle off: stop cycle timer</br>
 - cycle [0-5]: set aero by your self *need stop cycle timer</br>
-*timer will continue after change the map of channcel
+*Timer will continue after change the map or channcel
  
 ## Config
 - "Enable": true/false -> enable and disable module</br>
