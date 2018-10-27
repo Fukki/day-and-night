@@ -192,7 +192,7 @@ module.exports = function Cycles(mod) {
 	
 	function msg(msg) {mod.command.message(msg);}
 	
-	function enable() {if (config.Enable && !bleb && config.cycleLock === 0) startTimer();}
+	function enable() {if (!bleb && config.Enable && config.cycleLock === 0) startTimer();}
 
 	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
