@@ -126,22 +126,22 @@ module.exports = function Cycles(mod) {
 						break;
 					case 'time':
 						if (!isNaN(arg)) {
+							config.cycleTime = Number(arg);
+							msg(`Time cycles for timer set to: ${config.cycleTime} ms.`);
+							saveConfig();
+						} else {
 							msg(`Must be the number.`);
-							break;
 						}
-						config.cycleTime = Number(arg);
-						msg(`Time cycles for timer set to: ${config.cycleTime} ms.`);
 						break;
-						saveConfig();
 					case 'loadtime':
 						if (!isNaN(arg)) {
+							config.loadTimeout = Number(arg);
+							msg(`Time cycles for load time set to: ${config.loadTimeout} ms.`);
+							saveConfig();
+						} else {
 							msg(`Must be the number.`);
-							break;
 						}
-						config.loadTimeout = Number(arg);
-						msg(`Time cycles for Load time set to: ${config.loadTimeout} ms.`);
 						break;
-						saveConfig();
 					case 'instance':
 					case 'dungeon':
 					case 'dg':
