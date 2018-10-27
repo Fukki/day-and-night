@@ -107,6 +107,8 @@ module.exports = function Cycles(mod) {
 					msg(`Aero for Instance has not enable`);
 				} else if (isBattleground) {
 					msg(`Aero for Battleground has not enable`);
+				} else if (isCivilUnrest) {
+					msg(`Aero for Civil Unrest has not enable`);
 				} else if (arg < aero.length) {
 					msg(`Time cycles set: ${arg}`);
 					count = arg;
@@ -145,21 +147,33 @@ module.exports = function Cycles(mod) {
 					case 'instance':
 					case 'dungeon':
 					case 'dg':
-						config.Instance = !config.Instance;
-						msg(`Time cycles for Instance: ${config.Instance ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-						saveConfig();
+						if (isInstance) {
+							msg(`Cannot set this while in Instance.`);
+						} else {
+							config.Instance = !config.Instance;
+							msg(`Time cycles for Instance: ${config.Instance ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+							saveConfig();
+						}
 						break;
 					case 'battleground':
 					case 'bg':
-						config.Battleground = !config.Battleground;
-						msg(`Time cycles for Battleground: ${config.Battleground ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-						saveConfig();
+						if (isBattleground) {
+							msg(`Cannot set this while in Battleground.`);
+						} else {
+							config.Battleground = !config.Battleground;
+							msg(`Time cycles for Battleground: ${config.Battleground ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+							saveConfig();
+						}
 						break;
 					case 'civilunrest':
 					case 'cu':
-						config.CivilUnrest = !config.CivilUnrest;
-						msg(`Time cycles for Civil Unrest: ${config.CivilUnrest ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
-						saveConfig();
+						if (isCivilUnrest) {
+							msg(`Cannot set this while in Civil Unrest.`);
+						} else {
+							config.CivilUnrest = !config.CivilUnrest;
+							msg(`Time cycles for Civil Unrest: ${config.CivilUnrest ? 'enable'.clr('00FF33') : 'disable'.clr('FF0000')}.`);
+							saveConfig();
+						}
 						break;
 					default:
 						msg(`Wrong command :v`);
