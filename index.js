@@ -159,6 +159,8 @@ module.exports = function Cycles(mod) {
 	
 	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
 	
+	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
+	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {
 		isLoading = true;
 		if (!config.Instance) isInstance = (e.zone >= 9000);
@@ -167,10 +169,8 @@ module.exports = function Cycles(mod) {
 		enable();
 	});
 	
-	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
-	
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLobby = false; isLoadinging = false;
+		isLobby = false; isLoading = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
