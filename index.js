@@ -9,7 +9,7 @@ const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island
 ];
 
 module.exports = function Cycles(mod) {
-	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoad = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
+	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoading = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
 	try {
 		config = require('./config.json');
 	} catch (e) {
@@ -160,24 +160,24 @@ module.exports = function Cycles(mod) {
 	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {
-		isLoad = true;
+		isLoading = true; enable();
 		if (!config.Instance) isInstance = (e.zone >= 9000);
 		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
 		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
-		enable();
 	});
 	
-	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; isLoad = false; enable();});
+	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLobby = false; isLoad = false;
+		isLoadinging = false;
+		isLobby = false;
+		enable();
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
 				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);
 			}, config.loadTimeout);
 		}
-		enable();
 	});
 	
 	function aeroChange(aeroSet, blendTime, enabled){
@@ -191,7 +191,7 @@ module.exports = function Cycles(mod) {
 
 	function aeroSwitch(aeroSet, blendTime = btime) {
 		lastAero = aeroSet + 1;
-		if (!isLobby && !isLoad && !isInstance && !isBattleground && !isCivilUnrest) {
+		if (!isLobby && !isLoading && !isInstance && !isBattleground && !isCivilUnrest) {
 			for(i = 0; i < aero.length; i++) {
 				if (i === aeroSet) aeroChange(i, blendTime, true);
 				else if (isChanged[i]) aeroChange(i, blendTime, false);
