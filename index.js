@@ -170,7 +170,7 @@ module.exports = function Cycles(mod) {
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLoadinging = false; isLobby = false;
+		isLobby = false; isLoadinging = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
