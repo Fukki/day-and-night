@@ -160,24 +160,24 @@ module.exports = function Cycles(mod) {
 	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {
-		isLoading = true; enable();
+		isLoading = true;
 		if (!config.Instance) isInstance = (e.zone >= 9000);
 		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
 		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
+		enable();
 	});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLoadinging = false;
-		isLobby = false;
-		enable();
+		isLoadinging = false; isLobby = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
 				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);
 			}, config.loadTimeout);
 		}
+		enable();
 	});
 	
 	function aeroChange(aeroSet, blendTime, enabled){
