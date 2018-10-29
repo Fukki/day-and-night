@@ -1,15 +1,11 @@
-String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` }
-
-const path = require('path');
-const fs = require('fs');
-
+String.prototype.clr = function (hexColor) {return `<font color="#${hexColor}">${this}</font>`}
 const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island_AERO_FINAL",
 	"aen_aeroset.AERO.AEN_C_Misty_Island_Outdoor_AERO", "RNW_Aeroset_Various.AERO.Sunset_AERO",
 	"atw_aeroset.AERO.SPR_Dawn_Garden_02_AERO", "lobby_ch_select_aero.AERO.Lobby_CH_Select_AERO_Night_02"
-];
+], aeroLen = aero.length, path = require('path'), fs = require('fs');
 
 module.exports = function Cycles(mod) {
-	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoading = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
+	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoading = false, isSpawning = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
 	try {
 		config = require('./config.json');
 	} catch (e) {
@@ -63,11 +59,11 @@ module.exports = function Cycles(mod) {
 						msg(`Aero for Battleground has not enable`);
 					} else if (isCivilUnrest) {
 						msg(`Aero for Civil Unrest has not enable`);
-					} else if (arg2 < aero.length) {
+					} else if (arg2 < aeroLen) {
 						msg(`Time cycles set: ${arg2}`);
 						count = arg2; aeroSwitch(arg2, 5);
 					} else {
-						msg(`Please use 0 ~ ${(aero.length - 1)} for set.`);
+						msg(`Please use 0 ~ ${(aeroLen - 1)} for set.`);
 					}
 					break;
 				case 'lock':
@@ -78,7 +74,7 @@ module.exports = function Cycles(mod) {
 						msg(`Aero for Battleground has not enable`);
 					} else if (isCivilUnrest) {
 						msg(`Aero for Civil Unrest has not enable`);
-					} else if (arg2 < aero.length) {
+					} else if (arg2 < aeroLen) {
 						if (arg2 < 0) {
 							msg(`Time cycles has unlock.`);
 							config.cycleLock = 0;
@@ -90,7 +86,7 @@ module.exports = function Cycles(mod) {
 						saveConfig();
 						}
 					} else {
-						msg(`Please use 0 ~ ${(aero.length - 1)} for lock.`);
+						msg(`Please use 0 ~ ${(aeroLen - 1)} for lock.`);
 					}
 					break;
 				case 'unlock':
@@ -162,19 +158,21 @@ module.exports = function Cycles(mod) {
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {
-		isLoading = true;
+		isLoading = true; isSpawning = (lastAero > 0);
 		if (!config.Instance) isInstance = (e.zone >= 9000);
 		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
 		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
+		for(i = 0; i < aeroLen; i++) if (isChanged[i]) aeroChange(i, 0, false);
 		enable();
 	});
 	
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLobby = false; isLoading = false;
+		isLoading = false; isLobby = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
-				isChanged = []; aeroSwitch(((config.cycleLock > 0) ? (config.cycleLock - 1) : (lastAero - 1)), 5);
+				aeroSwitch(config.cycleLock > 0 ? config.cycleLock - 1 : lastAero - 1, 5);
+				isSpawning = false;
 			}, config.loadTimeout);
 		}
 		enable();
@@ -192,7 +190,7 @@ module.exports = function Cycles(mod) {
 	function aeroSwitch(aeroSet, blendTime = btime) {
 		lastAero = aeroSet + 1;
 		if (!isLobby && !isLoading && !isInstance && !isBattleground && !isCivilUnrest) {
-			for(i = 0; i < aero.length; i++) {
+			for(i = 0; i < aeroLen; i++) {
 				if (i === aeroSet) aeroChange(i, blendTime, true);
 				else if (isChanged[i]) aeroChange(i, blendTime, false);
 			}
@@ -202,8 +200,9 @@ module.exports = function Cycles(mod) {
 	function startTimer() {
 		cleanTimer();
 		bleb = setInterval(function () {
-			if (count < aero.length) {
-				aeroSwitch(count);
+			if (count < aeroLen) {
+				if (!isSpawning)
+					aeroSwitch(count);
 				count++;
 			} else {
 				count = 0;
