@@ -12,7 +12,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - cycle dg: enable/disable cycle in dungeopn</br>
 - cycle bg: enable/disable cycle in battleground</br>
 - cycle cu: enable/disable cycle in civilunrest</br>
-- cycle blacklist: enable/disable cycle in zone</br>
+- cycle blacklist: add/remove cycle in zone</br>
 *Timer will continue after change the map or channcel
  
 ## Config
