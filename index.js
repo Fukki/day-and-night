@@ -78,11 +78,13 @@ module.exports = function Cycles(mod) {
 						if (arg2 < 0) {
 							msg(`Time cycles has unlock.`);
 							config.cycleLock = 0;
+							startTimer();
 							saveConfig();
 						} else {
 						msg(`Time cycles lock to: ${arg2}`);
 						config.cycleLock = arg2 + 1;
 						count = arg2; aeroSwitch(arg2, 5);
+						cleanTimer();
 						saveConfig();
 						}
 					} else {
@@ -92,6 +94,7 @@ module.exports = function Cycles(mod) {
 				case 'unlock':
 					msg(`Time cycles has unlock.`);
 					config.cycleLock = 0;
+					startTimer();
 					saveConfig();
 					break;
 				case 'time':
@@ -216,7 +219,7 @@ module.exports = function Cycles(mod) {
 	
 	function cleanTimer() {if (bleb) {clearInterval(bleb);bleb = null;}}
 	
-	function enable() {if (!bleb && config.Enable && config.cycleLock === 0) startTimer();}
+	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0) startTimer();}
 
 	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
