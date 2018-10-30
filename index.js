@@ -5,7 +5,7 @@ const aero = ["VK_Aeroset.VK_SkyCastle00_AERO", "aen_aeroset.AERO.Serpent_Island
 ], aeroLen = aero.length, path = require('path'), fs = require('fs');
 
 module.exports = function Cycles(mod) {
-	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoading = false, isSpawning = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
+	let config = {}, isChanged = [], lastAero = 0, btime = 0, count = 0, aZone = 0, zoneBattleground = 0, bleb = null, otime = null, isLobby = true, isLoad = false, isSpawn = false, isInstance = false, isBattleground = false, isCivilUnrest = false;
 	try {
 		config = require('./config.json');
 	} catch (e) {
@@ -14,23 +14,25 @@ module.exports = function Cycles(mod) {
 			Instance: false,
 			Battleground: false,
 			CivilUnrest: false,
+			zoneBlacklist: [],
 			cycleLock: 0,
 			cycleTime: 120000,
 			loadTimeout: 1000,
-			version: "1d"
+			version: "1e"
 		};
 		saveConfig();
 	}
-	if (config.version !== "1d") {
+	if (config.version !== "1e") {
 		config = {
 			Enable: config.Enable ? config.Enable : false,
 			Instance: config.Instance ? config.Instance : false,
 			Battleground: config.Battleground ? config.Battleground : false,
 			CivilUnrest: config.CivilUnrest ? config.CivilUnrest : false,
+			zoneBlacklist: config.zoneBlacklist ? config.zoneBlacklist : [],
 			cycleLock: config.cycleLock ? config.cycleLock : 0,
 			cycleTime: config.cycleTime ? config.cycleTime : 120000,
 			loadTimeout: config.loadTimeout ? config.loadTimeout : 1000,
-			version: "1d"
+			version: "1e"
 		};
 		saveConfig();
 	}
@@ -149,6 +151,17 @@ module.exports = function Cycles(mod) {
 						saveConfig();
 					}
 					break;
+				case 'blacklist':
+				case 'black':
+					if (config.zoneBlacklist.includes(aZone)) {
+						config.zoneBlacklist.splice(config.zoneBlacklist.indexOf(aZone), 1);
+						msg(`Zone ${aZone} has removed from blacklist.`);
+					} else {
+						config.zoneBlacklist.push(aZone);
+						msg(`Zone ${aZone} added to blacklist.`);
+					}
+					saveConfig();
+					break;
 				default:
 					msg(`Wrong command :v`);
 					break;
@@ -156,26 +169,26 @@ module.exports = function Cycles(mod) {
 		}
 	});
 	
-	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone});
+	mod.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, e => {zoneBattleground = e.zone;});
 	
 	mod.hook("S_RETURN_TO_LOBBY", 'raw', () => {isLobby = true; enable();});
 	
 	mod.hook('S_LOAD_TOPO', 3, (e) => {
-		isLoading = true; isSpawning = (lastAero > 0);
-		if (!config.Instance) isInstance = (e.zone >= 9000);
-		if (!config.CivilUnrest) isCivilUnrest = (e.zone === 152);
-		if (!config.Battleground) isBattleground = (e.zone === zoneBattleground);
+		isLoad = true; isSpawn = (lastAero > 0); aZone = e.zone;
+		if (!config.Instance) isInstance = (aZone >= 9000);
+		if (!config.CivilUnrest) isCivilUnrest = (aZone === 152);
+		if (!config.Battleground) isBattleground = (aZone === zoneBattleground);
 		for(i = 0; i < aeroLen; i++) if (isChanged[i]) aeroChange(i, 0, false);
 		enable();
 	});
 
 	mod.hook("S_SPAWN_ME", 'raw', () => {
-		isLoading = false; isLobby = false;
+		isLoad = false; isLobby = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
 				aeroSwitch(lastAero - 1, 5);
-				isSpawning = false;
+				isSpawn = false;
 			}, config.loadTimeout);
 		}
 		enable();
@@ -192,7 +205,7 @@ module.exports = function Cycles(mod) {
 
 	function aeroSwitch(aeroSet, blendTime = btime) {
 		lastAero = aeroSet + 1;
-		if (!isLobby && !isLoading && !isInstance && !isBattleground && !isCivilUnrest) {
+		if (!isLobby && !isLoad && !isInstance && !isBattleground && !isCivilUnrest && !config.zoneBlacklist.includes(aZone)) {
 			for(i = 0; i < aeroLen; i++) {
 				if (i === aeroSet) aeroChange(i, blendTime, true);
 				else if (isChanged[i]) aeroChange(i, blendTime, false);
@@ -204,7 +217,7 @@ module.exports = function Cycles(mod) {
 		cleanTimer();
 		bleb = setInterval(function () {
 			if (count < aeroLen) {
-				if (!isSpawning)
+				if (!isSpawn)
 					aeroSwitch(count);
 				count++;
 			} else {
@@ -217,9 +230,9 @@ module.exports = function Cycles(mod) {
 	
 	function cleanTimeout() {if (otime) {clearTimeout(otime); otime = null;}}
 	
-	function cleanTimer() {if (bleb) {clearInterval(bleb);bleb = null;}}
+	function cleanTimer() {if (bleb) {clearInterval(bleb); bleb = null;}}
 	
-	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0) startTimer();}
+	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0 && !config.zoneBlacklist.includes(aZone)) {startTimer();} else {cleanTimer();}}
 
 	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
