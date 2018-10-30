@@ -78,13 +78,13 @@ module.exports = function Cycles(mod) {
 						if (arg2 < 0) {
 							msg(`Time cycles has unlock.`);
 							config.cycleLock = 0;
-							startTimer();
 							saveConfig();
+							startTimer();
 						} else {
+						cleanTimer();
 						msg(`Time cycles lock to: ${arg2}`);
 						config.cycleLock = arg2 + 1;
 						count = arg2; aeroSwitch(arg2, 5);
-						cleanTimer();
 						saveConfig();
 						}
 					} else {
@@ -94,8 +94,8 @@ module.exports = function Cycles(mod) {
 				case 'unlock':
 					msg(`Time cycles has unlock.`);
 					config.cycleLock = 0;
-					startTimer();
 					saveConfig();
+					startTimer();
 					break;
 				case 'time':
 				case 'timer':
