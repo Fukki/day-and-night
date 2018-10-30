@@ -34,7 +34,7 @@ module.exports = function Cycles(mod) {
 		};
 		saveConfig();
 	}
-	
+	lastAero = config.cycleLock > 0 ? config.cycleLock : 0;
 	btime = Math.floor(config.cycleTime/1000);
 	
 	if (config.Enable)
@@ -168,13 +168,13 @@ module.exports = function Cycles(mod) {
 		for(i = 0; i < aeroLen; i++) if (isChanged[i]) aeroChange(i, 0, false);
 		enable();
 	});
-	
+
 	mod.hook("S_SPAWN_ME", 'raw', () => {
 		isLoading = false; isLobby = false;
 		if (lastAero > 0) {
 			cleanTimeout();
 			otime = setTimeout(function () {
-				aeroSwitch(config.cycleLock > 0 ? config.cycleLock - 1 : lastAero - 1, 5);
+				aeroSwitch(lastAero - 1, 5);
 				isSpawning = false;
 			}, config.loadTimeout);
 		}
