@@ -81,14 +81,13 @@ module.exports = function Cycles(mod) {
 							msg(`Time cycles has unlock.`);
 							config.cycleLock = 0;
 							saveConfig();
-							startTimer();
 						} else {
-						cleanTimer();
-						msg(`Time cycles lock to: ${arg2}`);
-						config.cycleLock = arg2 + 1;
-						count = arg2; aeroSwitch(arg2, 5);
-						saveConfig();
+							msg(`Time cycles lock to: ${arg2}`);
+							config.cycleLock = arg2 + 1;
+							count = arg2; aeroSwitch(arg2, 5);
+							saveConfig();
 						}
+						enable();
 					} else {
 						msg(`Please use 0 ~ ${(aeroLen - 1)} for lock.`);
 					}
@@ -97,7 +96,7 @@ module.exports = function Cycles(mod) {
 					msg(`Time cycles has unlock.`);
 					config.cycleLock = 0;
 					saveConfig();
-					startTimer();
+					enable();
 					break;
 				case 'time':
 				case 'timer':
@@ -161,6 +160,7 @@ module.exports = function Cycles(mod) {
 						msg(`Zone ${aZone} added to blacklist.`);
 					}
 					saveConfig();
+					enable();
 					break;
 				default:
 					msg(`Wrong command :v`);
