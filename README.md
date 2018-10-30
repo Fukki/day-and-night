@@ -12,6 +12,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - cycle dg: enable/disable cycle in dungeopn</br>
 - cycle bg: enable/disable cycle in battleground</br>
 - cycle cu: enable/disable cycle in civilunrest</br>
+- cycle blacklist: enable/disable cycle in zone</br>
 *Timer will continue after change the map or channcel
  
 ## Config
@@ -19,6 +20,7 @@ Adds an incredibly poorly done day night cycle to Tera because I was bored.</br>
 - "Instance": true/false -> enable and disable aero in dungeon</br>
 - "Battleground": true/false -> enable and disable aero in Battleground</br>
 - "CivilUnrest": true/false -> enable and disable aero in CU</br>
+- "zoneBlacklist" : [] -> disable cycle in that zone</br>
 - "cycleLock": 0 -> lock aero to not change *(1~6)</br>
 - "cycleTime": 120000 -> timer for next aero *ms</br>
 - "loadTimeout": 1000 -> change aero when change the map or channel *ms</br>
