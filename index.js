@@ -56,11 +56,13 @@ module.exports = function Cycles(mod) {
 					if (bleb) {
 						msg(`Please ${'disable'.clr('FF0000')} cycle before set.`);
 					} else if (isInstance) {
-						msg(`Aero for Instance has not enable`);
+						msg(`Aero for Instance has not enable.`);
 					} else if (isBattleground) {
-						msg(`Aero for Battleground has not enable`);
+						msg(`Aero for Battleground has not enable.`);
 					} else if (isCivilUnrest) {
-						msg(`Aero for Civil Unrest has not enable`);
+						msg(`Aero for Civil Unrest has not enable.`);
+					} else if (config.cycleLock > 0) {
+						msg(`Time cycle has locked.`);
 					} else if (arg2 < aeroLen) {
 						msg(`Time cycles set: ${arg2}`);
 						count = arg2; aeroSwitch(arg2, 5);
@@ -71,11 +73,11 @@ module.exports = function Cycles(mod) {
 				case 'lock':
 					arg2 = Number(arg2);
 					if (isInstance) {
-						msg(`Aero for Instance has not enable`);
+						msg(`Aero for Instance has not enable.`);
 					} else if (isBattleground) {
-						msg(`Aero for Battleground has not enable`);
+						msg(`Aero for Battleground has not enable.`);
 					} else if (isCivilUnrest) {
-						msg(`Aero for Civil Unrest has not enable`);
+						msg(`Aero for Civil Unrest has not enable.`);
 					} else if (arg2 < aeroLen) {
 						if (arg2 < 0) {
 							msg(`Time cycles has unlock.`);
@@ -232,7 +234,7 @@ module.exports = function Cycles(mod) {
 	
 	function cleanTimer() {if (bleb) {clearInterval(bleb); bleb = null;}}
 	
-	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0) {startTimer();} else {cleanTimer();}}
+	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0) {startTimer();} else if (config.cycleLock > 0) {cleanTimer();}}
 
 	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
