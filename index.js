@@ -232,7 +232,7 @@ module.exports = function Cycles(mod) {
 	
 	function cleanTimer() {if (bleb) {clearInterval(bleb); bleb = null;}}
 	
-	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0 && !config.zoneBlacklist.includes(aZone)) {startTimer();} else {cleanTimer();}}
+	function enable() {if (!bleb && config.Enable && config.cycleLock <= 0) {startTimer();} else {cleanTimer();}}
 
 	function saveConfig() {fs.writeFile(path.join(__dirname, 'config.json'), JSON.stringify(config, null, 4), err => {});}
 };
