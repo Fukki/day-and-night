@@ -1,8 +1,12 @@
 {
 	"disableAutoUpdate": false,
+	"name": "Day and Night",
+	"author": "Fukki",
+	"description": "Adds day and night switch for Tera best quality of life.",
+	"version": "Kappa :v",
 	"options": {
 		"niceName": "Day and Night"
 	},
-    "servers": ["https://raw.githubusercontent.com/Fukki/day-and-night/master/"],
-    "supportUrl": "https://github.com/Fukki/day-and-night/issues"
+	"servers": ["https://raw.githubusercontent.com/Fukki/day-and-night/master/"],
+	"supportUrl": "https://github.com/Fukki/day-and-night/issues"
 }
